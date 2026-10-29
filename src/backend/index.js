@@ -38,6 +38,8 @@ app.get('/api/v1/viajes', async (req, res) => {
                 v.id_viaje,
                 v.codigo_seguimiento,
                 c.razon_social AS cliente,
+                b.numero_boleta,
+                b.descripcion_mercancia,
                 m.nombre_completo AS motorista,
                 u.placa AS unidad,
                 a.nombre AS aduana,
@@ -47,6 +49,7 @@ app.get('/api/v1/viajes', async (req, res) => {
                 v.fecha_creacion
             FROM viaje v
             JOIN cliente c ON v.id_cliente = c.id_cliente
+            LEFT JOIN boleta b ON v.id_viaje = b.id_viaje
             JOIN motorista m ON v.id_motorista = m.id_motorista
             JOIN unidad u ON v.id_unidad = u.id_unidad
             JOIN aduana a ON v.id_aduana = a.id_aduana

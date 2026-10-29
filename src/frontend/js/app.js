@@ -15,9 +15,18 @@ async function cargarViajes() {
             result.data.forEach(viaje => {
                 tbody.innerHTML += `
                     <tr>
-                        <td class="fw-bold text-primary">${viaje.codigo_seguimiento}</td>
-                        <td>${viaje.cliente}</td>
-                        <td><small>${viaje.origen} &rarr; ${viaje.destino}</small></td>
+                        <td class="fw-bold text-primary">
+                            ${viaje.codigo_seguimiento}<br>
+                            <small class="text-muted"><i class="bi bi-file-earmark-text"></i> ${viaje.numero_boleta || 'Sin boleta'}</small>
+                        </td>
+                        <td>
+                            <strong>${viaje.cliente}</strong><br>
+                            <small class="text-secondary">${viaje.descripcion_mercancia || ''}</small>
+                        </td>
+                        <td>
+                            <small>${viaje.origen} &rarr; ${viaje.destino}</small><br>
+                            <span class="badge bg-light text-dark border"><i class="bi bi-truck"></i> Unida: ${viaje.unidad}</span>
+                        </td>
                         <td><span class="badge ${obtenerBadgeColor(viaje.estado_actual)}">${viaje.estado_actual}</span></td>
                         <td>
                             <select class="form-select form-select-sm" onchange="actualizarEstado(${viaje.id_viaje}, this.value)">
@@ -34,11 +43,11 @@ async function cargarViajes() {
                 `;
             });
         } else {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4">No hay viajes registrados.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4">No se encontraron viajes registrados.</td></tr>`;
         }
     } catch (error) {
         console.error('Error cargando viajes:', error);
-        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">Error al conectar con la API Backend.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-danger py-4">Error al conectar con la API Backend en AWS.</td></tr>`;
     }
 }
 
@@ -50,7 +59,7 @@ async function actualizarEstado(idViaje, nuevoEstado) {
             body: JSON.stringify({
                 nuevo_estado: nuevoEstado,
                 registrado_por: 'Operador Logístico',
-                nota: `Cambio manual desde panel web`
+                nota: 'Actualización manual desde panel web'
             })
         });
 
